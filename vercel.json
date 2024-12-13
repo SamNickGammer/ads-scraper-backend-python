@@ -1,19 +1,14 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
+  "builds": [
+    {
+      "src": "Dockerfile",
+      "use": "@vercel/docker"
+    }
   ],
-  "build": {
-    "env": {
-      "PIP_NO_CACHE_DIR": "1",
-      "PIP_DISABLE_PIP_VERSION_CHECK": "1",
-      "PYTHONUNBUFFERED": "1"
-    },
-    "postBuild": "apt-get update && \
-      apt-get install -y wget unzip && \
-      wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-      apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-      wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
-      unzip chromedriver_linux64.zip -d /usr/bin/ && \
-      chmod +x /usr/bin/chromedriver"
-  }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ]
 }
