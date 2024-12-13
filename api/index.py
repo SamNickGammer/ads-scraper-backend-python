@@ -11,6 +11,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from selenium.webdriver.chrome.options import Options
+import undetected_chromedriver.v2 as uc
 
 
 app = Flask(__name__)
@@ -33,18 +34,11 @@ class KeywordExtractor:
     #     self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     #     self.driver.get(self.url)
     def setup_browser(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run in headless mode
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-    
-        # Use the pre-installed Chrome and driver paths
-        chrome_options.binary_location = "/usr/bin/google-chrome-stable"
-        self.driver = webdriver.Chrome(
-            executable_path="/usr/bin/chromedriver",
-            options=chrome_options
-        )
+        options = uc.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        self.driver = uc.Chrome(options=options)
         self.driver.get(self.url)
 
     def find_iframe_src_and_fetch_data(self):
