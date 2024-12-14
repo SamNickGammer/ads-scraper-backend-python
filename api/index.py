@@ -32,8 +32,11 @@ class KeywordExtractor:
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
 
-        # Use a writable directory for WebDriver Manager cache
-        os.environ['WDM_LOCAL'] = '/tmp'  # Added: Set cache directory to /tmp
+        # Ensure WebDriver Manager uses /tmp for downloads and cache
+        cache_dir = "/tmp/.wdm"
+        os.environ["WDM_LOCAL"] = cache_dir  # Cache directory for WebDriver Manager
+        os.environ["WDM_CACHE_DIR"] = cache_dir  # Explicitly set cache directory
+        
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         self.driver.get(self.url)
         
