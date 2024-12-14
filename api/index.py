@@ -121,8 +121,7 @@ def scrape():
         os.environ['WDM_LOCAL'] = '/tmp'
 
         # Initialize the driver using the Service and options
-        service = Service(ChromeDriverManager(path=cache_dir).install())
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
         # Navigate to the initial page
         driver.get(url)
