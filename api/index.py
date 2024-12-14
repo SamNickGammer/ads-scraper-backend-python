@@ -73,7 +73,7 @@ class KeywordExtractor:
 
 @app.route('/version', methods=['GET'])
 def get_version():
-    return jsonify({"version": "1.0.0"}), 200
+    return jsonify({"version": "1.0.2"}), 200
 
 
 @app.route('/extract-keywords', methods=['POST'])
