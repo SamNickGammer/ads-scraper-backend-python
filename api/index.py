@@ -33,7 +33,9 @@ class KeywordExtractor:
         chrome_options.add_argument("--disable-dev-shm-usage")
 
         # Ensure WebDriver Manager uses /tmp for downloads and cache
-        os.environ['WDM_LOCAL'] = '/tmp'
+        cache_dir = "/tmp/.wdm"
+        os.environ["WDM_LOCAL"] = cache_dir  # Cache directory for WebDriver Manager
+        os.environ["WDM_CACHE_DIR"] = cache_dir  # Explicitly set cache directory
         
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         self.driver.get(self.url)
@@ -99,14 +101,7 @@ def scrape():
         if not url:
             return jsonify({"error": "URL is required"}), 400
 
-        # # Set up Chrome WebDriver with headless mode
-        # options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")  # To run in headless mode
-        # service = Service(ChromeDriverManager().install())  # Set up the driver service
-
-        # # Initialize the driver using the Service and options
-        # driver = webdriver.Chrome(service=service, options=options)
-       
+        # Set up Chrome WebDriver with headless mode
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")  # To run in headless mode
         options.add_argument("--disable-gpu")
@@ -114,14 +109,14 @@ def scrape():
         options.add_argument("--disable-dev-shm-usage")
 
         # Ensure WebDriver Manager uses /tmp for downloads and cache
-        # cache_dir = "/tmp/.wdm"
-        # os.makedirs(cache_dir, exist_ok=True)
-        # os.environ["WDM_LOCAL"] = cache_dir
-        # os.environ["WDM_CACHE_DIR"] = cache_dir
-        os.environ['WDM_LOCAL'] = '/tmp'
+        cache_dir = "/tmp/.wdm"
+        os.makedirs(cache_dir, exist_ok=True)
+        os.environ["WDM_LOCAL"] = cache_dir
+        os.environ["WDM_CACHE_DIR"] = cache_dir
 
         # Initialize the driver using the Service and options
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        service = Service(ChromeDriverManager(path=cache_dir).install())
+        driver = webdriver.Chrome(service=service, options=options)
 
         # Navigate to the initial page
         driver.get(url)
@@ -185,4 +180,3 @@ def scrape():
     except Exception as e:
         print(f"Error: {str(e)}")  # Log the exception
         return jsonify({'error': str(e)}), 500
-
