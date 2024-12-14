@@ -11,6 +11,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from selenium.webdriver.chrome.options import Options
+import os
 
 
 app = Flask(__name__)
@@ -30,8 +31,14 @@ class KeywordExtractor:
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+
+        # Use a writable directory for WebDriver Manager cache
+        os.environ['WDM_LOCAL'] = '/tmp'  # Added: Set cache directory to /tmp
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         self.driver.get(self.url)
+        
+        # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        # self.driver.get(self.url)
 
     def find_iframe_src_and_fetch_data(self):
         try:
