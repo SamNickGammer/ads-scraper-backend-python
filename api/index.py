@@ -33,9 +33,7 @@ class KeywordExtractor:
         chrome_options.add_argument("--disable-dev-shm-usage")
 
         # Ensure WebDriver Manager uses /tmp for downloads and cache
-        cache_dir = "/tmp/.wdm"
-        os.environ["WDM_LOCAL"] = cache_dir  # Cache directory for WebDriver Manager
-        os.environ["WDM_CACHE_DIR"] = cache_dir  # Explicitly set cache directory
+        os.environ['WDM_LOCAL'] = '/tmp'
         
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         self.driver.get(self.url)
@@ -101,12 +99,28 @@ def scrape():
         if not url:
             return jsonify({"error": "URL is required"}), 400
 
-        # Set up Chrome WebDriver with headless mode
+        # # Set up Chrome WebDriver with headless mode
+        # options = webdriver.ChromeOptions()
+        # options.add_argument("--headless")  # To run in headless mode
+        # service = Service(ChromeDriverManager().install())  # Set up the driver service
+
+        # # Initialize the driver using the Service and options
+        # driver = webdriver.Chrome(service=service, options=options)
+       
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")  # To run in headless mode
-        service = Service(ChromeDriverManager().install())  # Set up the driver service
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
+        # Ensure WebDriver Manager uses /tmp for downloads and cache
+        cache_dir = "/tmp/.wdm"
+        os.makedirs(cache_dir, exist_ok=True)
+        os.environ["WDM_LOCAL"] = cache_dir
+        os.environ["WDM_CACHE_DIR"] = cache_dir
 
         # Initialize the driver using the Service and options
+        service = Service(ChromeDriverManager(path=cache_dir).install())
         driver = webdriver.Chrome(service=service, options=options)
 
         # Navigate to the initial page
