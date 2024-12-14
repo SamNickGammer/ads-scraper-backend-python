@@ -114,10 +114,11 @@ def scrape():
         options.add_argument("--disable-dev-shm-usage")
 
         # Ensure WebDriver Manager uses /tmp for downloads and cache
-        cache_dir = "/tmp/.wdm"
-        os.makedirs(cache_dir, exist_ok=True)
-        os.environ["WDM_LOCAL"] = cache_dir
-        os.environ["WDM_CACHE_DIR"] = cache_dir
+        # cache_dir = "/tmp/.wdm"
+        # os.makedirs(cache_dir, exist_ok=True)
+        # os.environ["WDM_LOCAL"] = cache_dir
+        # os.environ["WDM_CACHE_DIR"] = cache_dir
+        os.environ['WDM_LOCAL'] = '/tmp'
 
         # Initialize the driver using the Service and options
         service = Service(ChromeDriverManager(path=cache_dir).install())
