@@ -11,7 +11,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from selenium.webdriver.chrome.options import Options
-import undetected_chromedriver.v2 as uc
+import undetected_chromedriver as uc
 
 
 app = Flask(__name__)
@@ -25,21 +25,17 @@ class KeywordExtractor:
         self.element_id = "relatedsearches1"  # Use this ID consistently
         self.iframe_class_to_extract = "p_ si34 span"  # Class to search spans
 
-    def setup_browser(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run in headless mode
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-        self.driver.get(self.url)
     # def setup_browser(self):
-    #     options = uc.ChromeOptions()
-    #     options.add_argument("--headless")
-    #     options.add_argument("--disable-gpu")
-    #     options.add_argument("--no-sandbox")
-    #     self.driver = uc.Chrome(options=options)
+    #     chrome_options = Options()
+    #     chrome_options.add_argument("--headless")  # Run in headless mode
+    #     chrome_options.add_argument("--disable-gpu")
+    #     chrome_options.add_argument("--no-sandbox")
+    #     chrome_options.add_argument("--disable-dev-shm-usage")
+    #     self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     #     self.driver.get(self.url)
+    def setup_browser(self):
+        self.driver = uc.Chrome(headless=True,use_subprocess=False)
+        self.driver.get(url)
 
     def find_iframe_src_and_fetch_data(self):
         try:
